@@ -1,10 +1,40 @@
 package org.example;
 
 import io.javalin.Javalin;
+import io.javalin.rendering.template.JavalinJte;
+import static io.javalin.rendering.template.TemplateUtil.model;
+import org.example.hexlet.model.Course;
+import org.example.hexlet.dto.courses.CoursePage;
+import org.example.hexlet.dto.courses.CoursesPage;
+
+import java.util.List;
 
 public class HelloWorld {
     public static void main(String[] args) {
-        var app = Javalin.create(config -> config.bundledPlugins.enableDevLogging());
+        var app = Javalin.create(config -> {
+            config.bundledPlugins.enableDevLogging();
+            config.fileRenderer(new JavalinJte());
+        });
+
+        app.get("/", ctx -> ctx.render("index.jte"));
+
+        app.get("/courses/{id}", ctx -> {
+            var id = ctx.pathParam("id");
+            var course = new Course("java", "Java course for beginners");
+            var page = new CoursePage(course);
+            ctx.render("courses/show.jte", model("page", page));
+        });
+
+        app.get("/courses", ctx -> {
+            var courses = List.of(
+                    new Course("Java Basics", "An introductory course to Java."),
+                    new Course("Advanced Java", "A deep dive into Java programming."),
+                    new Course("Java Spring Framework", "Learn to build applications using Spring.")
+            );
+            var header = "Курсы по программированию";
+            var page = new CoursesPage(courses, header);
+            ctx.render("courses/index.jte", model("page", page));
+        });
 
         app.get("/users", ctx -> ctx.result("GET /users"));
 
