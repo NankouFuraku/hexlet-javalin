@@ -8,6 +8,12 @@ public class HelloWorld {
 
         app.get("/users", ctx -> ctx.result("GET /users"));
 
+        app.get("/users/{id}/post/{postId}", ctx -> {
+            var id = ctx.pathParam("id");
+            var postId = ctx.pathParam("postId");
+            ctx.result("User ID: " + id + " Post ID: " + postId);
+        });
+
         app.get("/hello", ctx -> {
             var name = ctx.queryParamAsClass("name", String.class).getOrDefault("World");
             ctx.result("Hello, " + name + "!");
