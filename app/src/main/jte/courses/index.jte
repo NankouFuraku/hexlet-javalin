@@ -7,6 +7,10 @@
         <title>Хекслет</title>
     </head>
     <body>
+    <form action="/courses" method="get">
+    <input type="search" name="term" value="${page.getTerm()}" />
+    <input type="submit" value="Search" />
+    </form>
         <h1>${page.getHeader()}</h1>
         @if(page.getCourses().isEmpty())
             <p>Пока не добавлено ни одного курса</p>
